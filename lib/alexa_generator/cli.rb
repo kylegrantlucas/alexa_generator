@@ -86,6 +86,18 @@ module AlexaGenerator
 
           puts "Created ./#{gemname}/lib/#{gemname}/#{skill_file}.rb" if file
         end
+
+        file = File.open("./#{gemname}/lib/#{gemname}/endpoint.rb", 'w') do |file|
+          file << "module Sinatra\n"
+          file << "  module #{name.camelize}\n"
+          file << "    def self.endpoint\n"
+          file << "      '/alexa_#{gemname}'\n"
+          file << "    end\n"
+          file << "  end\n"
+          file << "end\n"
+        end
+
+        puts "Created ./#{gemname}/lib/#{gemname}/endpoint.rb" if file
       end
     end
   end
