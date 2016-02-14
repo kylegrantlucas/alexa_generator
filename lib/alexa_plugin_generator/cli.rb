@@ -1,7 +1,7 @@
 require 'thor'
 require 'active_support/core_ext/string'
 
-module AlexaGenerator
+module AlexaPluginGenerator
   class HammerOfTheGods < Thor
     desc "hello NAME", "This will greet you"
     long_desc <<-HELLO_WORLD

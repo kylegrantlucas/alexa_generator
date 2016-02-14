@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby -U
 
-require 'alexa_generator'
+require 'alexa_plugin_generator'
 
-AlexaGenerator::HammerOfTheGods.start( ARGV )
+AlexaPluginGenerator::HammerOfTheGods.start( ARGV )

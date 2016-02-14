@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'alexa_generator/version'
+require 'alexa_plugin_generator/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "alexa_generator"
-  spec.version       = AlexaGenerator::VERSION
+  spec.name          = "alexa_plugin_generator"
+  spec.version       = AlexaPluginGenerator::VERSION
   spec.authors       = ["kylegrantlucas"]
   spec.email         = ["kglucas93@gmail.com"]
 
   spec.summary       = %q{A command line tool for generating singing_assistant middleware templates.}
   spec.description   = %q{A command line tool for generating singing_assistant middleware templates.}
-  spec.homepage      = "http://github.com/kylegrantlucas/alexa_generator"
+  spec.homepage      = "http://github.com/kylegrantlucas/alexa_plugin_generator"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }

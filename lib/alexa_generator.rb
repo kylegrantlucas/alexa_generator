@@ -1,6 +1,6 @@
-require "alexa_generator/version"
-require "alexa_generator/cli"
+require "alexa_plugin_generator/version"
+require "alexa_plugin_generator/cli"
 
-module AlexaGenerator
+module AlexaPluginGenerator
   # Your code goes here...
 end
