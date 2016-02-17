@@ -3,19 +3,17 @@ require 'active_support/core_ext/string'
 
 module AlexaPluginGenerator
   class HammerOfTheGods < Thor
-    desc "hello NAME", "This will greet you"
-    long_desc <<-HELLO_WORLD
+    desc "new NAME", "Will create all files need to build a SingingAssistant alexa plugin."
+    long_desc <<-ALEXA_PLUGIN_GENERATOR
 
-    `hello NAME` will print out a message to the person of your choosing.
+    `new NAME` will create all files to build a SingingAssitant alexa plugin.
 
-    Brian Kernighan actually wrote the first "Hello, World!" program 
-    as part of the documentation for the BCPL programming language 
-    developed by Martin Richards. BCPL was used while C was being 
-    developed at Bell Labs a few years before the publication of 
-    Kernighan and Ritchie's C book in 1972.
+    All you need to do is define the methods that match up to the intent name of your
+    action. You will also need to define your sample_utterances, custom_slots and intent_schema
+    for your alexa skill.
 
-    http://stackoverflow.com/a/12785204
-    HELLO_WORLD
+    http://github.com/kylegrantlucas/alexa_plugin_generator
+    ALEXA_PLUGIN_GENERATOR
     def new( name )
       name = name[6..-1] if name[0..5] == "alexa_"
       gemname = "alexa_#{name}"
@@ -32,18 +30,18 @@ module AlexaPluginGenerator
             file.split("\n").each_with_index do |line, index|
               line_number = index+1
               if filename == "lib/#{gemname}.rb"
-                if line_number == 2
-                  new_file << "require 'sinatra/base'\n"
+                if line_number == 1
+                  new_file << "require 'sinatra/extension'\n"
                   new_file << "require 'alexa_objects'\n\n"
                 elsif line_number == 3
-                  new_file << "module Siantra\n"
-                  new_file << "  module #{name.camelize}\n"
-                  new_file << "    def self.registered(app)\n"
-                  new_file << "      app.post '/#{gemname}' do\n"
-                  new_file << "      end\n"
+                  new_file << "module #{name.camelize}\n"
+                  new_file << "  extend Sinatra::Extension\n\n"
+                  new_file << "  helpers do\n"
+                  new_file << "    # TODO: Change to new intent name\n"
+                  new_file << "    def intent_name\n"
+                  new_file << "      # TODO: Implement intent\n"
                   new_file << "    end\n"
-                  new_file << "  end\n\n"
-                  new_file << "  register #{name.camelize}\n"
+                  new_file << "  end\n"
                   new_file << "end\n"
                 elsif line_number == 4
                 elsif line_number == 5
@@ -53,8 +51,8 @@ module AlexaPluginGenerator
                 end
               elsif filename == "#{gemname}.gemspec"
                 if line_number == 24
-                  new_file << "  spec.add_dependency 'sinatra'\n"
-                  new_file << "  spec.add_dependency 'alexa_objects'\n\n"
+                  new_file << "  spec.add_runtime_dependency 'sinatra-contrib'\n"
+                  new_file << "  spec.add_runtime_dependency 'alexa_objects'\n\n"
                 elsif line_number == 28
                   new_file << "#{line[0...-1]}, \"skills_config\"]\n"
                 elsif line_number.between?(17, 23)  
@@ -75,29 +73,15 @@ module AlexaPluginGenerator
           puts "Created ./#{gemname}/skills_config/#{skill_file}.txt" if system "touch ./#{gemname}/skills_config/#{skill_file}.txt"
 
           file = File.open("./#{gemname}/lib/#{gemname}/#{skill_file}.rb", 'w') do |file|
-            file << "module Sinatra\n"
-            file << "  module #{name.camelize}\n"
-            file << "    def self.#{skill_file}\n"
-            file << "      File.read(File.expand_path('../../../skills_config/#{skill_file}.txt', __FILE__))\n"
-            file << "    end\n"
+            file << "module #{name.camelize}\n"
+            file << "  def self.#{skill_file}\n"
+            file << "    File.read(File.expand_path('../../../skills_config/#{skill_file}.txt', __FILE__))\n"
             file << "  end\n"
             file << "end\n"
           end
 
           puts "Created ./#{gemname}/lib/#{gemname}/#{skill_file}.rb" if file
         end
-
-        file = File.open("./#{gemname}/lib/#{gemname}/endpoint.rb", 'w') do |file|
-          file << "module Sinatra\n"
-          file << "  module #{name.camelize}\n"
-          file << "    def self.endpoint\n"
-          file << "      '/alexa_#{gemname}'\n"
-          file << "    end\n"
-          file << "  end\n"
-          file << "end\n"
-        end
-
-        puts "Created ./#{gemname}/lib/#{gemname}/endpoint.rb" if file
       end
     end
   end
